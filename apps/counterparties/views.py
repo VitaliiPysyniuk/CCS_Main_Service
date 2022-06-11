@@ -1,5 +1,4 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, get_object_or_404, RetrieveAPIView
-from rest_framework.response import Response
 
 from .models import CounterpartyModel, CounterpartyTypeModel
 from .serializers import CounterpartyTypeSerializer, FullCounterpartySerializer, ShortCounterpartySerializer

@@ -11,7 +11,7 @@ from .serializers import ShortMovementDocumentSerializer, FullMovementDocumentSe
 from ..tmvs.models import TMVWarehouseModel
 from ..tmvs.serializers import TMVWarehouseSerializer
 from ..warehouses.models import WarehouseModel
-from ..warehouses.serializers import ShortWarehouseSerializer, FullWarehouseSerializer
+from ..warehouses.serializers import FullWarehouseSerializer
 from ..counterparties.models import CounterpartyModel
 from ..counterparties.serializers import ShortCounterpartySerializer
 
@@ -40,10 +40,6 @@ class MovementDocumentListCreateView(ListCreateAPIView):
             "message_text": f"На склад {warehouse['name']} створено переміщення "
                             f"№{serializer.data['id']} ({serializer.data['comment']})"
         }
-
-
-        print(NOTIFICATION_SERVICE)
-        print(data)
 
         response = requests.post(NOTIFICATION_SERVICE, data=json.dumps(data), headers={
             'Content-type': 'application/json'
@@ -99,31 +95,13 @@ class MovementDocumentItemView(GenericAPIView):
                     serializer.save()
 
                 elif item_status == 'updated':
-                    # item_instances = TMVWarehouseModel.objects.filter(movement_document=movement_id, tmv=item['tmv'])
-                    # for instance in item_instances:
-                    #     new_item = deepcopy(item)
-                    #     instance_data = TMVWarehouseSerializer(instance).data
-                    #     if instance_data['number'] < 0:
-                    #         new_item['number'] = -item['number']
-                    #     serializer = TMVWarehouseSerializer(instance, data=new_item, partial=True)
-                    #     serializer.is_valid(raise_exception=True)
-                    #     serializer.save()
-
-                    # item_instance = TMVWarehouseModel.objects.filter(movement_document=movement_id, id=item.id).first()
                     item_instance = get_object_or_404(TMVWarehouseModel, id=item['id'])
                     new_item = deepcopy(item)
-                    instance_data = TMVWarehouseSerializer(item_instance).data
-                    # if instance_data['number'] < 0:
-                    #     new_item['number'] = -item['number']
                     serializer = TMVWarehouseSerializer(item_instance, data=new_item, partial=True)
                     serializer.is_valid(raise_exception=True)
                     serializer.save()
 
                 elif item_status == 'deleted':
-                    # item_instances = TMVWarehouseModel.objects.filter(movement_document=movement_id, tmv=item['tmv'])
-                    # for instance in item_instances:
-                    #     instance.delete()
-
                     item_instance = get_object_or_404(TMVWarehouseModel, id=item['id'])
                     item_instance.delete()
 

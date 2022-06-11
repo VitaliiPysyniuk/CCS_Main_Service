@@ -66,4 +66,4 @@ class ProcurementDocumentItemView(GenericAPIView):
             except BaseException as error:
                 return Response(f'Error {error}', status=status.HTTP_404_NOT_FOUND)
 
-        return Response(status=status.HTTP_200_OK)
+        return Response(data='Success', status=status.HTTP_200_OK)

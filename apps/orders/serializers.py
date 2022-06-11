@@ -35,11 +35,3 @@ class FullOrderDocumentSerializer(ModelSerializer):
     class Meta:
         model = OrderDocumentModel
         fields = '__all__'
-
-
-class ShortOrderDocumentSerializer(ModelSerializer):
-    order_document_items = FullTMVOrderDocumentSerializer(many=True, required=False)
-
-    class Meta:
-        model = OrderDocumentModel
-        fields = '__all__'
