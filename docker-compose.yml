@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  main_service_database:
+    image: postgres
+    container_name: main_service_database
+    env_file:
+      - .env
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./db_backup:/var/lib/postgresql/data
+    restart: on-failure
+
+  main_service:
+    build:
+      context: .
+    container_name: main_service
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    restart: on-failure
+    depends_on:
+      - main_service_database
+    command: sh -c "/wait-for-it.sh main_service_database:5432 &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
